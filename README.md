@@ -12,13 +12,21 @@ To build the time zone data you will need a copy of the [Olsen database](https:/
 
 ## Building
 
-To build the library, run `make build`. You must have [node](https://nodejs.org) installed, but there are no other build dependencies.
+To build the library, run `npm run build`. You must have [node](https://nodejs.org) installed, but there are no other build dependencies.
 
 ## Usage guide
 
 This guide is intended to get you up and running with your own JMAP client as quickly as possible. Everything used in the [demo JMAP webmail](https://proxy.jmap.io) is covered; looking at [the source code of this](https://github.com/jmapio/jmap-demo-webmail) is also a great way to learn how to use the library.
 
 At some point you'll probably want to extend the classes with custom methods, or extra attributes, or need to do something crazier; if this happens, you might want to consult the [documentation for the Overture library](http://overturejs.com/docs/) for details of the underlying framework this is built on.
+
+### Installing
+
+You can install this package by running
+
+```
+npm install jmap-js
+```
 
 ### Authenticating
 

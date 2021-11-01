@@ -3,6 +3,7 @@
 "use strict";
 
 var fs = require( 'fs' );
+var path = require( 'path' );
 
 Array.prototype.include = function ( item ) {
     var i, l;
@@ -17,6 +18,22 @@ Array.prototype.include = function ( item ) {
 
 var stripStrict = function ( string ) {
     return string.replace( /^\s*"use strict"[;,]\n?/m, '' );
+};
+
+var getRecursiveFiles = function ( dirPath ) {
+    var files = fs.readdirSync(dirPath);
+
+    var arrayOfFiles = [];
+
+    files.forEach(function(file) {
+        if (fs.statSync( dirPath + "/" + file ).isDirectory()) {
+            arrayOfFiles.push.apply( arrayOfFiles, getRecursiveFiles( dirPath + "/" + file ) );
+        } else {
+            arrayOfFiles.push( path.join( __dirname, dirPath, "/", file ) );
+        }
+    });
+
+    return arrayOfFiles;
 };
 
 var groupIntoModules = function ( files ) {
@@ -113,7 +130,11 @@ var sortByDependencies = function ( files ) {
     }, [] );
 };
 
-var makeModule = function ( inputs, output ) {
+var makeModule = function ( inputDir, output ) {
+    var inputs = getRecursiveFiles( inputDir ).filter(function ( file ) {
+        return /\.js$/.test( file );
+    });
+
     // Always keep in the same order.
     inputs.sort();
     var module = '"use strict";\n\n';
@@ -123,11 +144,15 @@ var makeModule = function ( inputs, output ) {
 
     module += sortByDependencies( jsData ).join( '\n\n' );
 
+    if (!fs.existsSync(path.dirname( output ))) {
+        fs.mkdirSync(path.dirname( output ));
+    }
+
     fs.writeFileSync( output, module );
 };
 
 var args = process.argv.slice( 2 ),
-    sourceFiles = args.slice( 0, -1 ),
-    outputFiles = args[ args.length - 1 ];
+    sourceDir = args[ 0 ],
+    outputFile = args[ 1 ];
 
-makeModule( sourceFiles, outputFiles );
+makeModule( sourceDir, outputFile );
