@@ -1,5 +1,5 @@
 {
-  "name": "jmap-js",
+  "name": "@jmapio/jmap-js",
   "version": "1.0.0",
   "description": "JMAP-JS is an implementation of the JMAP mail, contacts and calendars model. JMAP is a new, very efficient protocol for synchronising mail, calendars and contacts with a server. Learn more at http://jmap.io",
   "main": "build/JMAP.js",
